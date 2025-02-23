@@ -1,0 +1,96 @@
+{% load static %}
+
+{% if media_files %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Files</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <style>
+        body {
+            padding: 20px;
+            background: linear-gradient(135deg, #2c2c2c, #4f4f4f, #ffffff);
+        }
+        .navbar {
+            margin-bottom: 20px;
+            background-color: #343a40;
+        }
+        .navbar .nav-link {
+            color: #ffffff !important;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .media-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .media-item {
+            flex: 1 1 calc(33.333% - 20px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #ffffff;
+            transition: transform 0.2s;
+        }
+        .media-item:hover {
+            transform: scale(1.05);
+        }
+        .media-item img, .media-item video {
+            max-width: 100%;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="btn btn-link navbar-toggler" href="{% url 'upload_file' %}">
+            <span class="navbar-toggler-icon"></span>
+        </a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'upload_file' %}">Upload</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="mb-4">Media Files</h1>
+
+        {% if media_files %}
+        <div class="media-list">
+            {% for file in media_files %}
+            <div class="media-item">
+                <p>{{ file.file.name }}</p>
+                {% if "mp4" in file.file.url or "webm" in file.file.url %}
+                <video width="320" height="240" controls>
+                    <source src="{{ file.file.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                {% else %}
+                <img src="{{ file.file.url }}" alt="Uploaded Image">
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No files uploaded yet.</p>
+        {% endif %}
+
+    </div>
+</body>
+</html>
+{% else %}
+  <p>No files uploaded yet.</p>
+{% endif %}
